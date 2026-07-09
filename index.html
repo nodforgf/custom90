@@ -276,7 +276,13 @@
             const startX = (window.innerWidth - totalWidth) / 2;
             const r = yesBtn.getBoundingClientRect();
 
-            // วาง yesBtn ตรงกลาง (transform ไม่กระทบ getBoundingClientRect)
+            // ย้าย yesBtn ไปซ้ายด้วย
+            yesBtn.style.position = 'fixed';
+            yesBtn.style.top = r.top + 'px';
+            yesBtn.style.left = startX + 'px';
+            yesBtn.style.zIndex = '99999';
+
+            // วาง noBtn ต่อจาก yesBtn
             noBtn.style.top = r.top + 'px';
             noBtn.style.left = (startX + yesBtn.offsetWidth + gap) + 'px';
             noBtn.style.visibility = 'visible';
