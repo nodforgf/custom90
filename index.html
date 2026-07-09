@@ -117,18 +117,6 @@
             background-color: #ff4d6d;
             color: white;
             box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
-            position: fixed;
-            z-index: 99999;
-            padding: 12px 30px;
-            font-size: 1rem;
-            font-weight: 600;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            white-space: nowrap;
-            font-family: 'Anuphan', sans-serif;
-            /* ซ่อนก่อน จะวางตำแหน่งตอน load */
-            visibility: hidden;
         }
 
         .modal {
@@ -267,56 +255,53 @@
     <script>
         let yesButtonScale = 1; 
         let rainInterval;
-
-        window.addEventListener('load', function() {
-            const noBtn = document.getElementById('noBtn');
-            const yesBtn = document.getElementById('yesBtn');
-            const gap = 20;
-            const totalWidth = yesBtn.offsetWidth + gap + noBtn.offsetWidth;
-            const startX = (window.innerWidth - totalWidth) / 2;
-            const r = yesBtn.getBoundingClientRect();
-
-            // ย้าย yesBtn ไปซ้ายด้วย
-            yesBtn.style.position = 'fixed';
-            yesBtn.style.top = r.top + 'px';
-            yesBtn.style.left = startX + 'px';
-            yesBtn.style.zIndex = '99999';
-
-            // วาง noBtn ต่อจาก yesBtn
-            noBtn.style.top = r.top + 'px';
-            noBtn.style.left = (startX + yesBtn.offsetWidth + gap) + 'px';
-            noBtn.style.visibility = 'visible';
-        });
+        let noBtnMoved = false;
 
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
-            
+
+            // ครั้งแรกที่หนี — แปลง noBtn เป็น fixed โดยจำตำแหน่งเดิม
+            if (!noBtnMoved) {
+                noBtnMoved = true;
+                const r = noBtn.getBoundingClientRect();
+                noBtn.style.position = 'fixed';
+                noBtn.style.top = r.top + 'px';
+                noBtn.style.left = r.left + 'px';
+                noBtn.style.zIndex = '99999';
+                noBtn.style.margin = '0';
+                // ให้ yesBtn อยู่กึ่งกลางหลัง noBtn หนี
+                yesBtn.style.position = 'fixed';
+                const yr = yesBtn.getBoundingClientRect();
+                yesBtn.style.top = yr.top + 'px';
+                yesBtn.style.left = (window.innerWidth / 2 - yr.width / 2) + 'px';
+                yesBtn.style.zIndex = '9999';
+                yesBtn.style.margin = '0';
+            }
+
+            const gap = 20;
             let x, y;
             let attempts = 0;
             const yesBtnRect = yesBtn.getBoundingClientRect();
 
-            // หาตำแหน่งที่ไม่ทับ yesBtn
             do {
                 x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40);
                 y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40);
                 attempts++;
             } while (
                 attempts < 50 &&
-                x < yesBtnRect.right + 20 &&
-                x + noBtn.offsetWidth > yesBtnRect.left - 20 &&
-                y < yesBtnRect.bottom + 20 &&
-                y + noBtn.offsetHeight > yesBtnRect.top - 20
+                x < yesBtnRect.right + gap &&
+                x + noBtn.offsetWidth > yesBtnRect.left - gap &&
+                y < yesBtnRect.bottom + gap &&
+                y + noBtn.offsetHeight > yesBtnRect.top - gap
             );
 
-            noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
-            noBtn.style.zIndex = '99999';
 
             yesButtonScale += 0.2;
             yesBtn.style.transform = `scale(${yesButtonScale})`;
-            yesBtn.style.transition = 'transform 0.3s ease'; 
+            yesBtn.style.transition = 'transform 0.3s ease';
         }
 
         function forgive() {
