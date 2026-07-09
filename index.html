@@ -271,9 +271,14 @@
         window.addEventListener('load', function() {
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
+            const gap = 20;
+            const totalWidth = yesBtn.offsetWidth + gap + noBtn.offsetWidth;
+            const startX = (window.innerWidth - totalWidth) / 2;
             const r = yesBtn.getBoundingClientRect();
+
+            // วาง yesBtn ตรงกลาง (transform ไม่กระทบ getBoundingClientRect)
             noBtn.style.top = r.top + 'px';
-            noBtn.style.left = (r.right + 20) + 'px';
+            noBtn.style.left = (startX + yesBtn.offsetWidth + gap) + 'px';
             noBtn.style.visibility = 'visible';
         });
 
