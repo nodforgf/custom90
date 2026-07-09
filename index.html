@@ -258,33 +258,35 @@
         
         <div class="btn-group">
             <button id="yesBtn" onclick="forgive()">ดีก็ได้</button>
+            <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">ไม่หาย</button>
         </div>
     </div>
-
-    <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">ไม่หาย</button>
 
     <script>
         let yesButtonScale = 1; 
         let rainInterval;
 
-        // วางปุ่มแดงให้อยู่ข้างๆ ปุ่มเขียวตอนเริ่ม
-        window.addEventListener('load', function() {
-            const noBtn = document.getElementById('noBtn');
-            const yesBtn = document.getElementById('yesBtn');
-            const r = yesBtn.getBoundingClientRect();
-            noBtn.style.position = 'fixed';
-            noBtn.style.top = r.top + 'px';
-            noBtn.style.left = (r.right + 20) + 'px';
-            noBtn.style.zIndex = '99999';
-        });
-
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
             
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40);
-            
+            let x, y;
+            let attempts = 0;
+            const yesBtnRect = yesBtn.getBoundingClientRect();
+
+            // หาตำแหน่งที่ไม่ทับ yesBtn
+            do {
+                x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40);
+                y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40);
+                attempts++;
+            } while (
+                attempts < 50 &&
+                x < yesBtnRect.right + 20 &&
+                x + noBtn.offsetWidth > yesBtnRect.left - 20 &&
+                y < yesBtnRect.bottom + 20 &&
+                y + noBtn.offsetHeight > yesBtnRect.top - 20
+            );
+
             noBtn.style.position = 'fixed';
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
@@ -292,7 +294,6 @@
 
             yesButtonScale += 0.2;
             yesBtn.style.transform = `scale(${yesButtonScale})`;
-            
             yesBtn.style.transition = 'transform 0.3s ease'; 
         }
 
