@@ -127,6 +127,8 @@
             cursor: pointer;
             white-space: nowrap;
             font-family: 'Anuphan', sans-serif;
+            /* ซ่อนก่อน จะวางตำแหน่งตอน load */
+            visibility: hidden;
         }
 
         .modal {
@@ -265,6 +267,15 @@
     <script>
         let yesButtonScale = 1; 
         let rainInterval;
+
+        window.addEventListener('load', function() {
+            const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+            const r = yesBtn.getBoundingClientRect();
+            noBtn.style.top = r.top + 'px';
+            noBtn.style.left = (r.right + 20) + 'px';
+            noBtn.style.visibility = 'visible';
+        });
 
         function moveButton() {
             const noBtn = document.getElementById('noBtn');
