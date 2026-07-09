@@ -305,6 +305,10 @@
         }
 
         function forgive() {
+            // ซ่อนปุ่มทั้งคู่
+            document.getElementById('yesBtn').style.display = 'none';
+            document.getElementById('noBtn').style.display = 'none';
+
             const modal = document.getElementById('successModal');
             modal.classList.add('show');
             
